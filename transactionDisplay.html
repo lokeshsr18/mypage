@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction Display</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+</head>
+<body>
+    <h1>View Transactions</h1>
+    <button id="loadTransactions">Display Transactions</button>
+    <div id="transactions"></div>
+
+    <script>
+        document.getElementById('loadTransactions').addEventListener('click', async function() {
+            const web3 = new Web3(Web3.givenProvider || "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID"); // Connect to Ethereum node via Infura
+            const contractABI = []; // Put your contract's ABI array here
+            const contractAddress = '0xYOUR_CONTRACT_ADDRESS'; // Your contract address here
+            const myContract = new web3.eth.Contract(contractABI, contractAddress);
+
+            const transactionsDiv = document.getElementById('transactions');
+            transactionsDiv.innerHTML = 'Loading transactions...';
+
+            try {
+                const events = await myContract.getPastEvents('AllEvents', {
+                    fromBlock: 0,
+                    toBlock: 'latest'
+                });
+
+                transactionsDiv.innerHTML = ''; // Clear loading message or previous entries
+
+                events.forEach(event => {
+                    const { transactionHash, returnValues, blockNumber } = event;
+                    const { sender, message } = returnValues; // Assuming 'sender' and 'message' are defined in your event
+                    web3.eth.getBlock(blockNumber).then(block => {
+                        const dateTime = new Date(block.timestamp * 1000).toLocaleString();
+                        transactionsDiv.innerHTML += `<div>
+                            <p>Transaction Hash: ${transactionHash}</p>
+                            <p>Sender: ${sender}</p>
+                            <p>Message: ${message}</p>
+                            <p>Date/Time: ${dateTime}</p>
+                        </div>`;
+                    });
+                });
+            } catch (error) {
+                transactionsDiv.innerHTML = 'Failed to load transactions. Check console for details.';
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
