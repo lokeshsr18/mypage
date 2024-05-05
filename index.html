@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ganache Transaction List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ganache Transaction List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Block</th>
+                <th>Age</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Value</th>
+                <th>Gas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>12345</td>
+                <td>5 mins ago</td>
+                <td>0x1234...5678</td>
+                <td>0xa1b2...c3d4</td>
+                <td>10 ETH</td>
+                <td>21000</td>
+            </tr>
+            <!-- Add more rows for additional transactions -->
+        </tbody>
+    </table>
+</body>
+</html>
