@@ -1,57 +1,469 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Ganache Transaction List</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lokesh Selvaraj | SAP Technical Consultant</title>
+<meta name="description" content="Lokesh Selvaraj — SAP Technical Consultant (SAP ABAP) specializing in SAP S/4HANA Cloud, BTP, RAP, CDS Views and Fiori extensibility.">
+<style>
+  :root{
+    --bg:#0b0f19;
+    --bg-alt:#111726;
+    --card:#151c2c;
+    --border:#232c40;
+    --text:#e7ecf7;
+    --muted:#93a0bd;
+    --accent:#4da3ff;
+    --accent-2:#7cf5c4;
+    --accent-grad: linear-gradient(120deg,#4da3ff,#7cf5c4);
+    --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+  }
+  a{color:inherit;text-decoration:none;}
+  .container{max-width:1100px;margin:0 auto;padding:0 24px;}
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
+  /* Nav */
+  header{
+    position:sticky;top:0;z-index:100;
+    background:rgba(11,15,25,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 24px;max-width:1100px;margin:0 auto;
+  }
+  .logo{font-weight:700;font-size:1.15rem;letter-spacing:0.5px;}
+  .logo span{background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .nav-links{display:flex;gap:28px;list-style:none;margin:0;padding:0;}
+  .nav-links a{color:var(--muted);font-weight:500;font-size:0.95rem;transition:color .2s;}
+  .nav-links a:hover{color:var(--text);}
+  .menu-btn{display:none;background:none;border:none;color:var(--text);font-size:1.6rem;cursor:pointer;}
 
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
+  @media (max-width:760px){
+    .nav-links{
+      position:fixed;top:64px;left:0;right:0;
+      background:var(--bg-alt);
+      flex-direction:column;
+      gap:0;
+      border-bottom:1px solid var(--border);
+      max-height:0;overflow:hidden;
+      transition:max-height .3s ease;
+    }
+    .nav-links.open{max-height:320px;}
+    .nav-links a{display:block;padding:16px 24px;border-top:1px solid var(--border);}
+    .menu-btn{display:block;}
+  }
 
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+  /* Hero */
+  .hero{
+    padding:96px 0 72px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;top:-120px;right:-120px;
+    width:420px;height:420px;border-radius:50%;
+    background:radial-gradient(circle, rgba(77,163,255,0.25), transparent 70%);
+    pointer-events:none;
+  }
+  .hero-inner{display:flex;flex-wrap:wrap;gap:48px;align-items:center;}
+  .hero-text{flex:1 1 420px;}
+  .eyebrow{
+    display:inline-block;color:var(--accent-2);font-weight:600;
+    letter-spacing:1.5px;text-transform:uppercase;font-size:0.8rem;
+    margin-bottom:16px;
+  }
+  .hero h1{font-size:clamp(2.2rem,5vw,3.4rem);margin:0 0 12px;line-height:1.15;}
+  .hero h1 .grad{background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p.lead{color:var(--muted);font-size:1.1rem;max-width:560px;margin:0 0 28px;}
+  .btn-row{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:13px 26px;border-radius:999px;font-weight:600;font-size:0.95rem;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn-primary{background:var(--accent-grad);color:#06111f;}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(77,163,255,0.3);}
+  .btn-outline{border:1px solid var(--border);color:var(--text);}
+  .btn-outline:hover{border-color:var(--accent);transform:translateY(-2px);}
 
-        tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-    </style>
+  .avatar-wrap{
+    flex:0 0 auto;width:220px;height:220px;border-radius:50%;
+    background:var(--accent-grad);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:var(--shadow);
+    margin:0 auto;
+  }
+  .avatar{
+    width:206px;height:206px;border-radius:50%;
+    background:var(--bg-alt);
+    display:flex;align-items:center;justify-content:center;
+    font-size:4rem;font-weight:700;color:var(--accent-2);
+  }
+
+  .stats{display:flex;gap:36px;margin-top:36px;flex-wrap:wrap;}
+  .stat b{display:block;font-size:1.6rem;color:var(--text);}
+  .stat span{color:var(--muted);font-size:0.85rem;}
+
+  /* Sections */
+  section{padding:80px 0;}
+  section:nth-of-type(even){background:var(--bg-alt);}
+  .section-head{margin-bottom:44px;}
+  .section-head .eyebrow{margin-bottom:8px;}
+  .section-head h2{font-size:clamp(1.6rem,3vw,2.2rem);margin:0;}
+  .section-head p{color:var(--muted);margin-top:10px;max-width:600px;}
+
+  /* About */
+  .about-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;}
+  @media (max-width:760px){.about-grid{grid-template-columns:1fr;}}
+  .about-list{list-style:none;margin:0;padding:0;display:grid;gap:14px;}
+  .about-list li{
+    display:flex;gap:12px;color:var(--muted);
+    background:var(--card);border:1px solid var(--border);
+    padding:14px 16px;border-radius:12px;
+  }
+  .about-list li::before{content:"▹";color:var(--accent);font-weight:700;}
+  .info-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:24px;
+  }
+  .info-card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;}
+  .info-card dt{color:var(--muted);font-size:0.85rem;}
+  .info-card dd{margin:0;font-weight:600;}
+
+  /* Skills */
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;}
+  .skill-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:26px;
+  }
+  .skill-card h3{margin:0 0 16px;font-size:1.05rem;color:var(--accent-2);}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .pill{
+    background:rgba(77,163,255,0.1);border:1px solid rgba(77,163,255,0.25);
+    color:var(--text);padding:6px 14px;border-radius:999px;font-size:0.85rem;
+  }
+  .pill.beginner{opacity:0.7;border-style:dashed;}
+
+  /* Experience timeline */
+  .timeline{position:relative;padding-left:28px;border-left:2px solid var(--border);display:grid;gap:36px;}
+  .timeline-item{position:relative;}
+  .timeline-item::before{
+    content:"";position:absolute;left:-35px;top:4px;
+    width:14px;height:14px;border-radius:50%;
+    background:var(--accent-grad);box-shadow:0 0 0 4px var(--bg-alt);
+  }
+  section:nth-of-type(odd) .timeline-item::before{box-shadow:0 0 0 4px var(--bg);}
+  .timeline-item .role{font-weight:700;font-size:1.05rem;}
+  .timeline-item .org{color:var(--accent);font-weight:600;}
+  .timeline-item .period{color:var(--muted);font-size:0.85rem;margin-bottom:8px;display:block;}
+
+  /* Projects */
+  .project-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;}
+  .project-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:14px;
+    transition:transform .2s, border-color .2s;
+  }
+  .project-card:hover{transform:translateY(-4px);border-color:var(--accent);}
+  .project-card h3{margin:0;font-size:1.15rem;}
+  .project-card .meta{color:var(--muted);font-size:0.85rem;}
+  .project-card .badge{
+    align-self:flex-start;background:rgba(124,245,196,0.1);
+    color:var(--accent-2);border:1px solid rgba(124,245,196,0.3);
+    padding:4px 12px;border-radius:999px;font-size:0.75rem;font-weight:600;
+  }
+  .project-card ul{margin:0;padding-left:18px;color:var(--muted);font-size:0.92rem;display:grid;gap:6px;}
+  .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:8px;}
+  .tag{background:var(--bg-alt);border:1px solid var(--border);padding:4px 10px;border-radius:8px;font-size:0.75rem;color:var(--muted);}
+
+  /* Education */
+  .edu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}
+  .edu-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;}
+  .edu-card .school{font-weight:700;}
+  .edu-card .period{color:var(--muted);font-size:0.85rem;}
+  .edu-card .score{margin-top:10px;color:var(--accent-2);font-weight:600;font-size:0.9rem;}
+
+  /* Contact */
+  .contact-box{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:48px;text-align:center;
+    background-image:radial-gradient(circle at top right, rgba(77,163,255,0.12), transparent 60%);
+  }
+  .contact-box h2{margin:0 0 12px;font-size:clamp(1.5rem,3vw,2.1rem);}
+  .contact-box p{color:var(--muted);max-width:480px;margin:0 auto 28px;}
+  .contact-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;}
+
+  footer{
+    padding:32px 0;text-align:center;color:var(--muted);
+    font-size:0.85rem;border-top:1px solid var(--border);
+  }
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.show{opacity:1;transform:none;}
+</style>
 </head>
 <body>
-    <h1>Ganache Transaction List</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Block</th>
-                <th>Age</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Value</th>
-                <th>Gas</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>12345</td>
-                <td>5 mins ago</td>
-                <td>0x1234...5678</td>
-                <td>0xa1b2...c3d4</td>
-                <td>10 ETH</td>
-                <td>21000</td>
-            </tr>
-            <!-- Add more rows for additional transactions -->
-        </tbody>
-    </table>
+
+<header>
+  <nav>
+    <div class="logo">Lokesh<span>.dev</span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">&#9776;</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <span class="eyebrow">SAP Technical Consultant</span>
+      <h1>Hi, I'm <span class="grad">Lokesh Selvaraj</span></h1>
+      <p class="lead">
+        I build SAP S/4HANA Cloud extensions with ABAP, RAP, CDS Views and BTP —
+        turning complex business requirements into reliable, on-time solutions
+        across SD, MM, FI, PP, QM, EAM and EWM.
+      </p>
+      <div class="btn-row">
+        <a href="#contact" class="btn btn-primary">Get in touch</a>
+        <a href="#projects" class="btn btn-outline">View projects</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>2+</b><span>Years of experience</span></div>
+        <div class="stat"><b>150+</b><span>Development objects delivered</span></div>
+        <div class="stat"><b>3</b><span>End-to-end &amp; support projects</span></div>
+      </div>
+    </div>
+    <div class="avatar-wrap">
+      <div class="avatar">LS</div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">About Me</span>
+      <h2>Professional Summary</h2>
+    </div>
+    <div class="about-grid">
+      <ul class="about-list reveal">
+        <li>SAP Technical Consultant with 2+ years of professional experience in SAP ABAP, across SAP S/4HANA Cloud Public Edition and Business Technology Platform.</li>
+        <li>Skilled in Developer Extensibility using ADT and BTP, BAPIs, and Key User Extensibility including Custom Fields, Cloud BAdIs, and Fiori application extensions.</li>
+        <li>Strong understanding of business processes with the ability to analyse requirements, check feasibility, and deliver efficient solutions for clients.</li>
+        <li>Extensive experience debugging SAP custom functionality and independently deriving business logic using functional knowledge.</li>
+        <li>Effective team leader, team member, and individual contributor with excellent communication and interpersonal skills.</li>
+        <li>Quick learner with the ability to adopt new technologies within a minimal time period.</li>
+      </ul>
+      <div class="info-card reveal">
+        <dl>
+          <dt>Location</dt><dd>Chennai, India</dd>
+          <dt>Email</dt><dd>lokeshsr1854@gmail.com</dd>
+          <dt>Phone</dt><dd>+91-9884246194</dd>
+          <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/lokesh-s-981ab3225" target="_blank" rel="noopener">lokesh-s-981ab3225</a></dd>
+          <dt>Languages</dt><dd>English, Tamil</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Toolbox</span>
+      <h2>Skills &amp; Technologies</h2>
+      <p>A focused stack for building and extending SAP S/4HANA Cloud applications.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <h3>Languages</h3>
+        <div class="pill-row">
+          <span class="pill">SAP ABAP</span>
+          <span class="pill">Java</span>
+          <span class="pill">Python</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>ERP Platforms</h3>
+        <div class="pill-row">
+          <span class="pill">SAP S/4HANA Cloud Public Edition</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>SAP Technologies</h3>
+        <div class="pill-row">
+          <span class="pill">SAP RAP</span>
+          <span class="pill">CDS Views</span>
+          <span class="pill">OData Services</span>
+          <span class="pill">ALV Reports</span>
+          <span class="pill">Adobe Forms</span>
+          <span class="pill">Application Jobs</span>
+          <span class="pill">Flexible Workflows</span>
+          <span class="pill beginner">CPI (Beginner)</span>
+          <span class="pill beginner">SAPUI5 (Beginner)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Career</span>
+      <h2>Work Experience</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <span class="period">June 2025 – Present</span>
+        <div class="role">SAP ABAP and BTP Consultant</div>
+        <div class="org">Empower Skills, Chennai</div>
+      </div>
+      <div class="timeline-item reveal">
+        <span class="period">June 2024 – May 2025</span>
+        <div class="role">SAP Developer Intern</div>
+        <div class="org">Empower Skills, Chennai</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Client Work</span>
+      <h2>Project Experience</h2>
+      <p>End-to-end implementation and support engagements on SAP S/4HANA Cloud Public Edition.</p>
+    </div>
+    <div class="project-grid">
+
+      <div class="project-card reveal">
+        <span class="badge">End-to-End Implementation · Onsite</span>
+        <h3>SKS Fasteners, Pune</h3>
+        <div class="meta">Associate Technical Consultant · Aug 2025 – Aug 2026</div>
+        <ul>
+          <li>Delivered 150+ development objects, contributing to 400+ custom developments overall.</li>
+          <li>Architected a Handling Unit Management &amp; Label Printing app for EWM.</li>
+          <li>Built a Machine Planning app for production order assignment and tracking.</li>
+          <li>Implemented Bulk Billing Document Printing (SD) and a GRN Upload app for Finance.</li>
+          <li>Built a Warehouse Management Report with Warehouse Order printing.</li>
+          <li>Built Transporter Details, Booking &amp; Palletization apps for supplier invoicing and sales tracking.</li>
+          <li>Handled complex Adobe Forms (invoices, POs, job cards, certificates) with on-time delivery.</li>
+          <li>Configured Application Jobs and customized Flexible Workflows with plant-based approval logic.</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag">SD</span><span class="tag">MM</span><span class="tag">FI</span>
+          <span class="tag">PP</span><span class="tag">QM</span><span class="tag">EAM</span><span class="tag">EWM</span>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <span class="badge">Offshore · Support</span>
+        <h3>Maxi Vision Eye Hospital, Chennai</h3>
+        <div class="meta">BTP Consultant · Apr 2026 – Aug 2026</div>
+        <ul>
+          <li>Configured and integrated SAP BTP with the SAP S/4HANA Public Cloud landscape alongside the Basis team.</li>
+          <li>Created SSL certificates, communication arrangements, and trust configurations for secure BTP integration.</li>
+          <li>Facilitated deployment of custom SAP Fiori/RAP applications.</li>
+          <li>Debugged the Supplier Invoice Printing custom application.</li>
+          <li>Troubleshot connectivity, authentication, and deployment issues between S/4HANA Public Cloud and BTP.</li>
+        </ul>
+        <div class="tag-row"><span class="tag">FI</span><span class="tag">BTP</span></div>
+      </div>
+
+      <div class="project-card reveal">
+        <span class="badge">Offshore · Support</span>
+        <h3>VKC Pride, Calicut</h3>
+        <div class="meta">Associate Technical Consultant · May 2026 – June 2026</div>
+        <ul>
+          <li>Built a custom Inventory Aging Report using SAP RAP and CDS Views, replicating the standard SAP application.</li>
+          <li>Extended the aging calculation with client-specific business rules based on the configured base date.</li>
+          <li>Delivered detailed inventory aging analysis across all materials, covering gaps in the standard app.</li>
+        </ul>
+        <div class="tag-row"><span class="tag">MM</span><span class="tag">RAP</span><span class="tag">CDS</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Background</span>
+      <h2>Education</h2>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <div class="school">B.Tech, Information Technology</div>
+        <div class="meta">Sri Sairam Engineering College, Chennai</div>
+        <div class="period">2021 – 2025</div>
+        <div class="score">CGPA: 8.52</div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="school">Higher Secondary Examination</div>
+        <div class="meta">Vidhya Matriculation Higher Secondary School</div>
+        <div class="period">2021</div>
+        <div class="score">Percentage: 94.26%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="contact-box reveal">
+      <h2>Let's work together</h2>
+      <p>Open to SAP ABAP, S/4HANA Cloud and BTP opportunities. Feel free to reach out.</p>
+      <div class="contact-links">
+        <a href="mailto:lokeshsr1854@gmail.com" class="btn btn-primary">Email Me</a>
+        <a href="tel:+919884246194" class="btn btn-outline">Call</a>
+        <a href="https://www.linkedin.com/in/lokesh-s-981ab3225" target="_blank" rel="noopener" class="btn btn-outline">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; <span id="year"></span> Lokesh Selvaraj. Built with HTML &amp; CSS.
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
 </body>
 </html>
